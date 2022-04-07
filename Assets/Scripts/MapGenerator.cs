@@ -18,7 +18,7 @@ public class MapGenerator : MonoBehaviour
             Random.InitState(seed);
 
         }
-        StartCoroutine(Generate());
+        StartCoroutine(Generate2());
     }
 
     private void UpdateSeed()
@@ -57,6 +57,40 @@ public class MapGenerator : MonoBehaviour
                     tile.GetComponent<SpriteRenderer>().color = Color.green;
                 }
                 else if (noise[i, j] < 1)
+                {
+                    tile.GetComponent<SpriteRenderer>().color = Color.yellow;
+                }
+            }
+        }
+
+        yield return true;
+    }
+
+    private IEnumerator Generate2()
+    {
+        GameObject tilePrefab = Resources.Load<GameObject>("Tile");
+        float[,] noise1 = GenerateNoise();
+        float[,] noise2 = GenerateNoise();
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                GameObject tile = Instantiate(tilePrefab);
+                tile.transform.position = new Vector3(i, j, 0);
+                if (noise1[i, j] < 0.5F && noise2[i, j] < 0.5F)
+                {
+                    tile.GetComponent<SpriteRenderer>().color = Color.red;
+                }
+                if (noise1[i, j] >= 0.5F && noise2[i, j] < 0.5F)
+                {
+                    tile.GetComponent<SpriteRenderer>().color = Color.blue;
+                }
+                if (noise1[i, j] < 0.5F && noise2[i, j] >= 0.5F)
+                {
+                    tile.GetComponent<SpriteRenderer>().color = Color.green;
+                }
+                if (noise1[i, j] >= 0.5F && noise2[i, j] >= 0.5F)
                 {
                     tile.GetComponent<SpriteRenderer>().color = Color.yellow;
                 }
