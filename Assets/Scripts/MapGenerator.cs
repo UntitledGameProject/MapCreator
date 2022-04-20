@@ -1,24 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using csDelaunay;
 
 public class MapGenerator : MonoBehaviour
 {
     public int seed = -1;
     public int width = 100;
     public int height = 100;
+    Voronoi voronoi;
+
 
     private void Start()
     {
         if (seed < 0)
         {
             UpdateSeed();
-        } else
+        }
+        else
         {
             Random.InitState(seed);
 
         }
-        StartCoroutine(Generate2());
+        //StartCoroutine(Generate2());
+        voronoi = VoronoiGenerator.Generate(new Vector2Int(100, 100), 50, 3);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (voronoi != null)
+        {
+            VoronoiGenerator.DrawGizmos(voronoi);
+        }
     }
 
     private void UpdateSeed()
