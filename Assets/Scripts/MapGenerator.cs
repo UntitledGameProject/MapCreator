@@ -13,6 +13,8 @@ public class MapGenerator : MonoBehaviour
 
     private void Start()
     {
+        GameObject biome = Resources.Load<GameObject>("Biome");
+
         if (seed < 0)
         {
             UpdateSeed();
@@ -20,10 +22,15 @@ public class MapGenerator : MonoBehaviour
         else
         {
             Random.InitState(seed);
-
         }
         //StartCoroutine(Generate2());
         voronoi = VoronoiGenerator.Generate(new Vector2Int(100, 100), 50, 3);
+        voronoi.Regions().ForEach((i) =>
+        {
+            GameObject obj = Instantiate(biome);
+            PolygonCollider2D col = obj.GetComponent<PolygonCollider2D>();
+            col.SetPath(0, i);
+        });
     }
 
     private void OnDrawGizmos()
